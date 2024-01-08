@@ -1,4 +1,5 @@
 /**
+ * 加入<dependency> ...orika-core... </dependency> 
  * 類別屬性複製工具， 將Object複製到Class， 屬性會自動轉換
  * 無法自動轉換類型 : 
  *    string -> localDateTim
