@@ -10,7 +10,7 @@ public enum OrikaMapperUtils {
         return MAPPER_FACADE.map(data, toClass);
     }
 
-    public <E, T> E map(Class<E> toClass, T data, CallBack<E,T> callBack) {
+    public <E, T> E map(Class<E> toClass, T data, BiConsumer<T,E> biConsumer) {
         MapperFacade mapperFacade = this.getMapperFacade(toClass, data, callBack);
         return mapperFacade.map(data, toClass);
     }
@@ -20,13 +20,13 @@ public enum OrikaMapperUtils {
         return MAPPER_FACADE.mapAsList(data, toClass);
     }
 
-    public <E, T> List<E> mapAsList(Class<E> toClass, Collection<T> data, CallBack<E,T> callBack) {
+    public <E, T> List<E> mapAsList(Class<E> toClass, Collection<T> data, BiConsumer<T,E> biConsumer) {
         T t = data.stream().findFirst().orElseThrow(() -> new ExceptionInInitializerError("The input collection has not be empty"));
         MapperFacade mapperFacade = this.getMapperFacade(toClass, t, configMap);
         return mapperFacade.mapAsList(data, toClass);
     }
 
-    private <E, T> MapperFacade getMapperFacade(Class<E> toClass, T data, CallBack<E,T> callBack) {
+    private <E, T> MapperFacade getMapperFacade(Class<E> toClass, T data, BiConsumer<T,E> biConsumer) {
         String mapKey = data.getClass().getCanonicalName() + "_" + toClass.getCanonicalName();
         MapperFacade mapperFacade = CACHE_MAPPER_FACADE_MAP.get(mapKey);
         if (Objects.isNull(mapperFacade)) {
@@ -36,7 +36,7 @@ public enum OrikaMapperUtils {
               @Override
               public void mapAtoB(Object a, Object b, MappingContext context)->{
                 if(Objects.nonNull(callBack)){
-                  callBack.callBack((T) a, (E) b);
+                  biConsumer.accept((T) a, (E) b);
                 }
                 super.mapAtoB(a, b, context);
               });
