@@ -1,3 +1,8 @@
+/**
+ * 類別屬性複製工具， 將Object複製到Class， 屬性會自動轉換
+ * 無法自動轉換類型 : 
+ *    string -> localDateTim
+ */
 public enum OrikaMapperUtils {
 
     private static final MapperFactory MAPPER_FACTORY = new DefaultMapperFactory.Builder().build();
@@ -47,5 +52,16 @@ public enum OrikaMapperUtils {
             CACHE_MAPPER_FACADE_MAP.put(mapKey, mapperFacade);
         }
         return mapperFacade;
+    }
+
+    /**
+     * 自訂轉換屬性範例
+     */
+    public static void main(String[] args){
+        UserDto dto = new UserDto(...);
+        UserVo vo =OrikaMapperUtils.map(UserVo.class, dto,(source, targe)->{
+            targe.setName(source.getCName());
+        });
+        
     }
 }
