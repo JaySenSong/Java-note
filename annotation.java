@@ -4,7 +4,6 @@
 public class User{
 
   @JsonIgnore        //不會包含在response JSON 
-  @Column(name ="id")     //映射到mongo collection
   private ObjectId id;
 
   @Transient        //不存入 DB
