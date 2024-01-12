@@ -6,6 +6,9 @@ public class User{
   @JsonIgnore        //不會包含在response JSON 
   private ObjectId id;
 
+  @Transient        //不存入 DB
+  private Boolean save;
+
   @Indexed(unique = true)      //mongo unique
   private String name;
 
