@@ -18,10 +18,16 @@ public class RequestWrapper extends HttpServletRequestWrapper {
 
     private final byte[] body;
 
-    public RequestWrapper(HttpServletRequest request, byte[] body) {
+    public RequestWrapper(HttpServletRequest request) {
         super(request);
-        this.body = body;
         paramMap.putAll(request.getParameterMap());
+        StringBuffer sBuffer = new StringBuffer();
+        BufferedReader bufferedReader = request.getReader();
+        String line;
+        while ((line = bufferedReader.readLine()) != null) {
+            sBuffer.append(line);
+        }
+        body = sBuffer.toString();
     }
 
     //自訂 header 寫入方法
@@ -137,13 +143,35 @@ public class RequestWrapper extends HttpServletRequestWrapper {
         return valueArr;
     }
 
-    // 自訂body 寫入方式, 防止存入RequestBody後消失
+    // 自訂body 寫入方式, 防止存入RequestBody後失效
     @Override
-    public ServletInputStream getInputStream() throws IOException{
-        return new ServletInputStreamWrapper(body);
-    }
+    public ServletInputStream getInputStream() {
+        final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(body.getBytes());
+        return new ServletInputStream() {
+            @Override
+            public int read() {
+                return byteArrayInputStream.read();
+            }
 
+            @Override
+            public boolean isFinished() {
+                return false;
+            }
+
+            @Override
+            public boolean isReady() {
+                return false;
+            }
+
+            @Override
+            public void setReadListener(ReadListener listener) {
+
+            }
+        };
+    }
     @Override
-    public int getContentLength(){ return body.length; }
+    public BufferedReader getReader() {
+        return new BufferedReader(new InputStreamReader(this.getInputStream()));
+    }
 
 }
