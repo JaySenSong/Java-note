@@ -21,7 +21,9 @@ public class TestController {
         String[] param2Arr = request.getParameterValues("param2");
         log.info("parameter param2: {}", Arrays.asList(param2Arr).toString());
 
-        
+        //獲取Body
+        byte[] body IOUtils.toByteArray(request.getInputStream());
+        String requestBody = new String(body, "UTF-8");
 
       
         return "SUCCESS";
