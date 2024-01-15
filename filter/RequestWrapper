@@ -7,18 +7,24 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import java.util.*;
 
 
+/**
+ * 自訂 RequestWrapper , 由於default HttpServletRequest的特性 => 不可寫入,只讀一次
+ */
 public class RequestWrapper extends HttpServletRequestWrapper {
-
 
     private Map<String, String> headerMap = new HashMap<>();
 
     private Map<String, String[]> paramMap = new HashMap<>();
 
-    public MapRequestWrapper(HttpServletRequest request) {
-        super(request);  
+    private final byte[] body;
+
+    public RequestWrapper(HttpServletRequest request, byte[] body) {
+        super(request);
+        this.body = body;
         paramMap.putAll(request.getParameterMap());
     }
 
+    //自訂 header 寫入方法
     public void addHeader(String name, String value) {
         headerMap.put(name, value);
     }
@@ -73,13 +79,13 @@ public class RequestWrapper extends HttpServletRequestWrapper {
         }
     }
 
+    //自訂 parameter 寫入方法
     public void addParameter(String name, String value) {
         String[] valueArr = paramMap.get(name);
         if (valueArr == null) {
             valueArr = new String[]{name};
             paramMap.put(name, valueArr);
         } else {
-            // 将添加的参数作为数组的首元素，并拷贝后续元素
             String[] newValueArr = new String[valueArr.length + 1];
             newValueArr[0] = value;
             for (int i = 0; i < valueArr.length; i++) {
@@ -130,4 +136,14 @@ public class RequestWrapper extends HttpServletRequestWrapper {
 
         return valueArr;
     }
+
+    // 自訂body 寫入方式, 防止存入RequestBody後消失
+    @Override
+    public ServletInputStream getInputStream() throws IOException{
+        return new ServletInputStreamWrapper(body);
+    }
+
+    @Override
+    public int getContentLength(){ return body.length; }
+
 }
