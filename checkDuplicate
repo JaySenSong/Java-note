@@ -1,0 +1,10 @@
+private <T,U> void checkDuplicate(List<T> list, Function<T, U> fun){
+  Set set = new HashSet<>();
+  for(T t : list){
+    U u = fun.apply(t);
+    if(!set.add(u))
+      throw new Exception(....)
+  }
+}
+
+checkDuplicate(userList, User::getName);
