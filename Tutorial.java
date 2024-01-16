@@ -1,3 +1,11 @@
+/**
+ * Supplier : a result
+ * Function : a input, a result
+ * BiFunction : two input, a result
+ * Consumer : a input
+ * BiConsumer : two input
+ */
+
 public class Tutorial{
 
   public void main(){
