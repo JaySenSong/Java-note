@@ -30,3 +30,15 @@ void whenDoesSupportHtml_expectHTMLEmailFormat() {
     Email value = emailCaptor.getValue();
     assertThat(value.getFormat()).isEqualTo(Format.HTML);
 }
+
+=========================
+
+  @Mock
+  HttpSession sesseion;
+
+  @Mock
+  HttpServletRequest request;
+
+  Mockito.when(request.getSession()).thenReturn(sesseion);
+  Mockito.when(session.getAttribute("test")).thenReturn("test01")
+  
