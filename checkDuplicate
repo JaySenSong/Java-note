@@ -8,3 +8,13 @@ private <T,U> void checkDuplicate(List<T> list, Function<T, U> fun){
 }
 
 checkDuplicate(userList, User::getName);
+
+//========================================================
+
+public <T> Predicate<T> distinctByInput(Function<? super T, Object> fun){
+    Set set = new HashSet<>();
+    return t -> set.add(fun.apply(t));
+}
+
+
+userList.stream().filter(distinctByInput(user -> user.getId)).collect(Collectors.toList());
