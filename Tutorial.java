@@ -1,9 +1,9 @@
 /**
- * Supplier : a result
- * Function : a input, a result
- * BiFunction : two input, a result
- * Consumer : a input
- * BiConsumer : two input
+ * Supplier : 0 input, 1 result
+ * Function : 1 input, 1 result
+ * BiFunction : 2 input, 1 result
+ * Consumer : 1 input, 0 result
+ * BiConsumer : 2 input, 0 result
  */
 
 public class Tutorial{
